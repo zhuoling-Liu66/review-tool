@@ -1,14 +1,14 @@
-# Contributing
+# 贡献指南
 
-Thanks for taking a look at `review-tool`.
+感谢关注 `review-tool`。
 
-## Before you start
+## 开始之前
 
-- This is an early-stage personal project. For larger changes, open an issue first so we can agree on the scope.
-- Bug reports should include the command, the target repository shape (not the source code), the exit code, and the relevant `.review/` artifact paths.
-- Never paste API keys, tokens, customer code, or other secrets into issues, pull requests, or logs.
+- 这是一个早期个人项目。较大的改动请先开 issue，确认范围后再动手。
+- 提交 bug 时，请提供命令、目标仓库的大致结构（不要贴源码）、退出码，以及相关 `.review/` 产物路径。
+- 不要在 issue、PR 或日志里粘贴 API key、token、客户代码或其他敏感信息。
 
-## Development setup
+## 开发环境
 
 ```bash
 npm ci
@@ -17,16 +17,16 @@ npm test
 npm run build
 ```
 
-The test suite uses temporary git repositories and mock model providers. It should not make real model calls.
+测试使用临时 git 仓库和 mock 模型，不会调用真实模型。
 
-## Pull requests
+## 提交 PR
 
-- Keep the change focused on one problem.
-- Add or update tests for behavior changes.
-- Run `npm run typecheck`, `npm test`, and `npm run build` before opening the PR.
-- Update the README or `docs/` when behavior, commands, configuration, or limitations change.
-- Do not commit `dist/`, `node_modules/`, `.review/`, `.env*`, or generated reports.
+- 一个 PR 只解决一个问题，保持改动聚焦。
+- 行为变化需要补充或更新测试。
+- 提交前运行 `npm run typecheck`、`npm test` 和 `npm run build`。
+- 行为、命令、配置或限制发生变化时，同步更新 README 或 `docs/`。
+- 不要提交 `dist/`、`node_modules/`、`.review/`、`.env*` 或生成的报告。
 
-## Security
+## 安全
 
-Please report sensitive vulnerabilities privately through GitHub Security Advisories. See [SECURITY.md](SECURITY.md).
+敏感漏洞请通过 GitHub Security Advisories 私下报告，详见 [SECURITY.md](SECURITY.md)。

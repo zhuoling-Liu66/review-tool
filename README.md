@@ -110,9 +110,9 @@ review.cmd full --repo C:\path\to\project --dry-run
 
 | 力度 | 只审改动（`run`） | 全项目（`full`） |
 |---|---|---|
-| Quick | 1 个 Finder；仅 blocker/security 做 1 票轻验证 | 每批 1 个 Finder，不投票 |
-| Standard | 3 个 Finder；每条 finding 3 票 | 每批 1 个 Finder，换用标准模型 |
-| Deep | 4 个 Finder；强模型；每条 finding 3 票 | 每批 1 个 Finder，换用更强模型 |
+| 快速（Quick） | 1 个 AI 查找员；仅对阻断/安全问题做 1 票轻验证 | 每批 1 个 AI 查找员，不投票 |
+| 标准（Standard） | 3 个 AI 查找员；每条问题 3 票 | 每批 1 个 AI 查找员，换用标准模型 |
+| 深度（Deep） | 4 个 AI 查找员；强模型；每条问题 3 票 | 每批 1 个 AI 查找员，换用更强模型 |
 
 `full` 是**范围**，Quick/Standard/Deep 是**力度**。全量扫描目前不会因为选了 Standard/Deep 就自动变成多 Finder 投票。
 
@@ -271,6 +271,6 @@ npm run build
 
 贡献前请先看 [CONTRIBUTING.md](CONTRIBUTING.md)。安全问题请按 [SECURITY.md](SECURITY.md) 私下报告，不要公开贴出密钥或漏洞细节。
 
-## License
+## 许可证
 
-[MIT](LICENSE)
+本项目采用 [MIT 许可证](LICENSE)。

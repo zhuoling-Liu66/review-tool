@@ -2,7 +2,7 @@
   "name": "review-tool",
   "version": "0.1.0",
   "type": "module",
-  "description": "Auditable, low-cost AI code review pipeline with fixed DAG orchestration, evidence grounding, verifier voting, and a hash-chained ledger.",
+  "description": "可审计、低成本的 AI 代码审查流水线：固定 DAG 编排、证据核对、多票复核与哈希链账本。",
   "license": "MIT",
   "author": "zhuoling-Liu66",
   "repository": {
