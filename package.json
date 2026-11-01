@@ -1,0 +1,56 @@
+{
+  "name": "review-tool",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Auditable, low-cost AI code review pipeline with fixed DAG orchestration, evidence grounding, verifier voting, and a hash-chained ledger.",
+  "license": "MIT",
+  "author": "zhuoling-Liu66",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhuoling-Liu66/review-tool.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zhuoling-Liu66/review-tool/issues"
+  },
+  "homepage": "https://github.com/zhuoling-Liu66/review-tool#readme",
+  "keywords": [
+    "ai",
+    "code-review",
+    "llm",
+    "static-analysis",
+    "developer-tools",
+    "audit",
+    "typescript"
+  ],
+  "bin": {
+    "review": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "tsx src/cli.ts",
+    "build": "tsup src/cli.ts --format esm --platform node --target node22 --clean --out-dir dist",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "commander": "^15.0.0",
+    "execa": "^10.2.1",
+    "picomatch": "^4.0.7",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/picomatch": "^4.0.3",
+    "tsup": "^9.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}

@@ -1,0 +1,63 @@
+# Copy this file into the target repository as .github/workflows/review.yml.
+# The target repository must install this tool as a dependency (or replace
+# `npx review` with a published package name). The same-repo AI step uses the
+# model secret; fork PRs never receive secrets and run deterministic checks only.
+name: review
+
+on:
+  pull_request:
+
+concurrency:
+  group: review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review-gate:
+    name: review/gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+      - name: AI review (same-repository PR only)
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: >
+          npx review run --repo . --mode standard --post --json
+          --pr "${{ github.event.pull_request.number }}"
+          --base "${{ github.event.pull_request.base.sha }}"
+          --head "${{ github.event.pull_request.head.sha }}"
+          > review-result.json
+
+      - name: Deterministic checks (fork PR, no secrets)
+        if: github.event.pull_request.head.repo.full_name != github.repository
+        run: >
+          npx review checks --repo .
+          --base "${{ github.event.pull_request.base.sha }}"
+          --head "${{ github.event.pull_request.head.sha }}"
+
+      - name: Upload review artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-artifacts
+          path: |
+            .review/artifacts/**
+            review-result.json
+          if-no-files-found: ignore
+          retention-days: 30

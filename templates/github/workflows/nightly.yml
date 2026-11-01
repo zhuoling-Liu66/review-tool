@@ -1,0 +1,45 @@
+# Copy this file to the target repository as .github/workflows/review-nightly.yml.
+# Adjust the package/install line and secrets for the target repository.
+name: review-nightly
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backlog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Scan recent commits
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: npx review scan --repo . --since 1d --mode standard --json > nightly-scan.json
+      - name: Run eval set
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: npx review eval --repo . --json > eval-result.json
+      - name: Upload nightly reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-nightly
+          path: |
+            .review/artifacts/**
+            .review/eval/results/**
+            nightly-scan.json
+            eval-result.json
+          if-no-files-found: ignore
+          retention-days: 30

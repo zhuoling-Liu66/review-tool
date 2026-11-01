@@ -1,0 +1,119 @@
+version: 1
+
+providers:
+  openai:
+    type: openai
+    api_key_env: OPENAI_API_KEY
+  anthropic:
+    type: anthropic
+    api_key_env: ANTHROPIC_API_KEY
+
+# USD per 1M tokens. Replace with your provider's current prices.
+pricing:
+  review-model: { input: 1.00, output: 5.00 }
+  cheap-model: { input: 0.15, output: 0.60 }
+
+models:
+  # M1: Quick Finder + optional lightweight blocker/security verifier.
+  quick:
+    provider: openai
+    name: review-model
+    max_output_tokens: 2048
+  finder:
+    provider: openai
+    name: review-model
+    max_output_tokens: 2048
+  # Falls back to quick if omitted.
+  verifier:
+    provider: openai
+    name: cheap-model
+    max_output_tokens: 1024
+  deep:
+    provider: openai
+    name: review-model
+    max_output_tokens: 4096
+
+budget:
+  per_run_tokens: { quick: 50000, standard: 200000, deep: 500000 }
+  hard_max_tokens: 600000
+  monthly_usd: 50
+  warn_at: 0.8
+  monthly_hard_stop: true
+
+cache:
+  enabled: true
+
+rounds:
+  max: 3
+  diff_only_after: 1
+  require_category_fix: true
+
+security:
+  gitleaks:
+    enabled: false
+    required: false
+    blocking: true
+  semgrep:
+    enabled: false
+    required: false
+    blocking: true
+  osv:
+    enabled: true
+    required: false
+    blocking: true
+
+approval:
+  low: { by: self, cooldown_min: 30 }
+  medium: { by: self_evidence, cooldown_min: 0 }
+  high: { by: external, cooldown_min: 0 }
+  checklist_version: 3
+  invalidate_on_new_diff: true
+  allow_solo_override: false
+  require_low_medium: false
+
+tiers:
+  high:
+    paths:
+      - ".github/workflows/**"
+      - "auth/**"
+      - "billing/**"
+      - "payments/**"
+      - "scripts/release/**"
+      - "migrations/**"
+      - "infra/**"
+  dependencies:
+    min_tier: medium
+  diff_size:
+    warn: 400
+    medium_at: 800
+    high_at: 1200
+
+checks:
+  format:
+    cmd: "npm run format:check"
+    blocking: true
+    timeout_sec: 120
+  lint:
+    cmd: "npm run lint"
+    blocking: true
+    timeout_sec: 180
+  test:
+    cmd: "npm test -- --run"
+    blocking: true
+    timeout_sec: 900
+  skip_paths: ["dist/**", "generated/**", "**/*.lock", "**/*.snap"]
+
+review:
+  skip_paths:
+    - "dist/**"
+    - "generated/**"
+    - "vendor/**"
+    - "**/*.lock"
+    - "package-lock.json"
+    - "pnpm-lock.yaml"
+    - "yarn.lock"
+    - "go.sum"
+    - "Cargo.lock"
+  light_paths: ["docs/**", "**/*.md"]
+  context_limits: { quick: 24000, standard: 26000, deep: 50000 }
+  min_severity_to_report: minor

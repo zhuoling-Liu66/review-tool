@@ -1,0 +1,16 @@
+{
+  "case_id": "example-001",
+  "base": "main",
+  "head": "<commit-or-branch-with-the-bug>",
+  "mode": "standard",
+  "expected_findings": [
+    {
+      "file": "src/example.ts",
+      "line": 42,
+      "category": "correctness",
+      "must_match": "expired"
+    }
+  ],
+  "clean": false,
+  "notes": "Copy this file into <repo>/.review/eval/cases and adjust references."
+}
